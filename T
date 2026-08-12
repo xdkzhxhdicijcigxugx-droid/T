@@ -1,0 +1,118 @@
+-- โหลด Rayfield UI Library
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+-- สร้างหน้าต่างหลัก (Window)
+local Window = Rayfield:CreateWindow({
+   Name = "😏 โฮคาเงะ: ฮับรวมความกวนตีนขั้นสุด 😈",
+   LoadingTitle = "กำลังเปิดโหมดตบเกรียน...",
+   LoadingSubtitle = "สร้างสรรค์โดย: ท่านโฮคาเงะ (สายป่วนแห่งเซิร์ฟ)",
+   ConfigurationSaving = {
+      Enabled = true,
+      FolderName = "HokageTrollHub",
+      FileName = "TrollConfig"
+   },
+   KeySystem = false,
+})
+
+-- สร้าง Tabs (หมวดหมู่ความป่วน)
+local SpamTab = Window:CreateTab("📢 สแปมข้อความกวนๆ", 4483362458)
+local TrollTab = Window:CreateTab("🏃‍♂️ วิ่งหนี & ปั่นป่วน", 4483362458)
+local ChaosTab = Window:CreateTab("💥 ระเบิดความฮา", 4483362458)
+local CreatorTab = Window:CreateTab("🛡️ เครดิตผู้สร้าง", 4483362458)
+
+-- 1. คลังข้อความสแปมกวนตีน
+local trollMessages = {
+   "😏 [โฮคาเงะสายป่วน]: ถึงหน้าตาจะไม่เหมือนพระเอก แต่เวลากินหมูกระทะผมสู้ตายนะครับ!",
+   "🙄 [โฮคาเงะสายป่วน]: ที่เงียบไม่ใช่เพราะหยิ่ง... แต่ขี้เกียจพิมพ์ เม้นท์เยอะเจ็บนิ้วเว้ย!",
+   "💸 [โฮคาเงะสายป่วน]: วิ่งหนีผีก็เหนื่อยแล้ว ยังต้องมาวิ่งหนีความจนอีก ชีวิตมันร้าวราน!",
+   "🤡 [โฮคาเงะสายป่วน]: ใครเห็นข้อความนี้ขอให้หน้าตาดีเหมือนผม แต่ถ้าไม่อ่านขอให้โดนหวยกิน!",
+   "⚡ [โฮคาเงะสายป่วน]: หลบหน่อย พระเอกเดินดินจะเดิน แค่มาเดินเล่นเฉยๆ ไม่ได้จะมาเท่!"
+}
+
+SpamTab:CreateButton({
+   Name = "📢 ส่งข้อความกวนตีนเข้าแชทเซิร์ฟ",
+   Callback = function()
+      local msg = trollMessages[math.random(1, #trollMessages)]
+      local success = pcall(function()
+         game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync(msg)
+      end)
+      if not success then
+         local ReplicatedStorage = game:GetService("ReplicatedStorage")
+         local chatRemote = ReplicatedStorage:FindFirstChild("DefaultChatSystemChatEvents")
+         if chatRemote and chatRemote:FindFirstChild("SayMessageRequest") then
+             chatRemote.SayMessageRequest:FireServer(msg, "All")
+         end
+      end
+      Rayfield:Notify({Title = "ส่งความกวนแล้ว!", Content = "ยิงข้อความปั่นใส่แชทเรียบร้อย", Duration = 3})
+   end,
+})
+
+-- 2. โหมดวิ่งหนีแบบโอเวอร์แอคติ้ง
+TrollTab:CreateToggle({
+   Name = "🏃‍♂️ โหมดวิ่งหนีแบบโดนผีไล่ (WalkSpeed 50)",
+   CurrentValue = false,
+   Callback = function(v)
+      local char = game.Players.LocalPlayer.Character
+      if char and char:FindFirstChild("Humanoid") then
+         char.Humanoid.WalkSpeed = v and 50 or 16
+         Rayfield:Notify({Title = "ปรับความเร็ว", Content = v and "เปิดโหมดวิ่งหนีตับแล่บ!" or "กลับความเร็วปกติแล้ว", Duration = 3})
+      end
+   end,
+})
+
+-- โหมดกระโดดสูงข้ามตึก
+TrollTab:CreateToggle({
+   Name = "🦘 โหมดกระโดดหนีความจน (JumpPower สูงปรี้ด)",
+   CurrentValue = false,
+   Callback = function(v)
+      local char = game.Players.LocalPlayer.Character
+      if char and char:FindFirstChild("Humanoid") then
+         char.Humanoid.JumpPower = v and 150 or 50
+         Rayfield:Notify({Title = "พลังกระโดด", Content = v and "เปิดโหมดจิงโจ้ป่วนเมือง!" or "กลับสภาวะปกติ", Duration = 3})
+      end
+   end,
+})
+
+-- 3. เสกป้ายลอยฟ้าหรือเอฟเฟกต์กวนๆ
+ChaosTab:CreateButton({
+   Name = "✨ ปล่อยออร่าคนหล่อเก๊กซิม",
+   Callback = function()
+      local char = game.Players.LocalPlayer.Character
+      if char and char:FindFirstChild("HumanoidRootPart") then
+         local p = Instance.new("ParticleEmitter")
+         p.Parent = char.HumanoidRootPart
+         p.Texture = "rbxassetid://603109099" 
+         p.Rate = 50
+         p.Speed = NumberRange.new(5, 10)
+         Rayfield:Notify({Title = "ออร่าทำงาน!", Content = "ปล่อยแสงประกายความกวนรอบตัวแล้ว", Duration = 3})
+         task.wait(5)
+         p:Destroy()
+      end
+   end,
+})
+
+ChaosTab:CreateButton({
+   Name = "💤 แกล้งนอนตายกลางแมพ (เนียนๆ หลอกคนอื่น)",
+   Callback = function()
+      local char = game.Players.LocalPlayer.Character
+      if char and char:FindFirstChild("Humanoid") then
+         char.Humanoid.PlatformStand = true
+         Rayfield:Notify({Title = "แกล้งตายสำเร็จ", Content = "นอนนิ่งๆ แกล้งตาย หลอกตาชาวบ้าน (กดรีเซ็ตตัวละครเพื่อลุก)", Duration = 5})
+      end
+   end,
+})
+
+-- 4. เครดิตผู้สร้าง
+CreatorTab:CreateSection("🛡️ ข้อมูลผู้สร้างความป่วน")
+CreatorTab:CreateParagraph({Title = "ชื่อสคริปต์", Content = "Hokage Troll Hub (ศูนย์รวมความกวนตีนขั้นเทพ)"})
+CreatorTab:CreateParagraph({Title = "ผู้สร้าง / ผู้พัฒนา", Content = "ท่านโฮคาเงะ (หัวหน้าแก๊งสายป่วน)"})
+CreatorTab:CreateParagraph({Title = "คำเตือน", Content = "ใช้เพื่อความบันเทิงและสร้างเสียงฮาเท่านั้น ระวังโดนคนในเซิร์ฟรุมรีพอร์ตนะจ๊ะ!"})
+CreatorTab:CreateParagraph({Title = "ภาษาที่ใช้", Content = "ภาษาไทยสายกวน 100%"})
+
+-- แจ้งเตือนเมื่อรันสำเร็จ
+Rayfield:Notify({
+   Title = "😈 โหลดสคริปต์สายป่วนสำเร็จ!",
+   Content = "ยินดีต้อนรับท่านโฮคาเงะสู่โหมดปั่นประสาท เตรียมตัวไปสร้างความฮาได้เลย!",
+   Duration = 6,
+   Image = 4483362458,
+})
